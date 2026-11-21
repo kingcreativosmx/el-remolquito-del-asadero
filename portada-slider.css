@@ -40,10 +40,15 @@
   background: #100d0b;
 }
 
-.portada-promo__imagen {
+.portada-promo__imagen,
+.portada-inicio__movil img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.portada-inicio__movil {
+  display: none;
 }
 
 .portada-promo__pedidos {
@@ -143,6 +148,19 @@
 
   .portada-slide.is-current {
     display: flex;
+  }
+
+  .portada-slide--inicio.tiene-portada-movil > .hero {
+    display: none;
+  }
+
+  .tiene-portada-movil > .portada-inicio__movil {
+    display: block;
+    text-align: center;
+  }
+
+  .portada-inicio__movil > .primary {
+    margin-block: 0.75rem 0.25rem;
   }
 
   .portada-promo__pedidos {

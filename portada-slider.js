@@ -7,11 +7,18 @@ if (hero && !document.querySelector('.portada-slider')) {
   slider.innerHTML = `
     <div class="portada-slider__viewport">
       <div class="portada-slider__track">
-        <div class="portada-slide portada-slide--inicio is-current"></div>
+        <div class="portada-slide portada-slide--inicio is-current">
+          <div class="portada-inicio__movil">
+            <img width="1081" height="1351" alt="El Remolquito del Asadero y Asadero Ángel">
+          </div>
+        </div>
         <div class="portada-slide portada-slide--promo" aria-hidden="true" inert>
-          <img class="portada-promo__imagen" width="2048" height="733"
-               alt="Promo Miércoles. Refresco de litro y medio gratis."
-               decoding="async">
+          <picture>
+            <source media="(max-width: 740px)" width="1081" height="1351">
+            <img class="portada-promo__imagen" width="2048" height="733"
+                 alt="Promo Miércoles. Refresco de litro y medio gratis."
+                 decoding="async">
+          </picture>
           <div class="portada-promo__pedidos"></div>
         </div>
       </div>
@@ -51,6 +58,15 @@ if (hero && !document.querySelector('.portada-slider')) {
   }
 
   const imagenPromo = slider.querySelector('.portada-promo__imagen');
+  const fuentePromoMovil = slider.querySelector('.portada-slide--promo source');
+  const portadaMovil = slider.querySelector('.portada-inicio__movil');
+  const imagenPortadaMovil = portadaMovil.querySelector('img');
+  const enlaceMenu = hero.querySelector('a.primary[href]');
+  if (enlaceMenu) {
+    const enlaceMovil = enlaceMenu.cloneNode(true);
+    enlaceMovil.removeAttribute('id');
+    portadaMovil.append(enlaceMovil);
+  }
   const track = slider.querySelector('.portada-slider__track');
   const diapositivas = [...track.children];
   const puntos = slider.querySelectorAll('.portada-slider__punto');
@@ -159,11 +175,32 @@ if (hero && !document.querySelector('.portada-slider')) {
   });
   document.addEventListener('visibilitychange', programar);
 
+  function cargarPortadaMovil() {
+    if (vistaMovil.matches && !imagenPortadaMovil.hasAttribute('src')) {
+      imagenPortadaMovil.src = new URL('./assets/portada-movil.webp', import.meta.url).href;
+    }
+  }
+
+  imagenPortadaMovil.addEventListener('load', () => {
+    diapositivas[0].classList.add('tiene-portada-movil');
+  });
+  vistaMovil.addEventListener('change', cargarPortadaMovil);
+  cargarPortadaMovil();
+
   imagenPromo.addEventListener('load', () => {
     promoLista = true;
     puntos[1].disabled = false;
     programar();
-  }, { once: true });
+  });
+  imagenPromo.addEventListener('error', () => {
+    promoLista = false;
+    puntos[1].disabled = true;
+    mostrar(0);
+    if (vistaMovil.matches && fuentePromoMovil.hasAttribute('srcset')) {
+      fuentePromoMovil.removeAttribute('srcset');
+    }
+  });
+  fuentePromoMovil.srcset = new URL('./assets/promo-miercoles-movil.webp', import.meta.url).href;
   imagenPromo.src = new URL('./assets/promo-portada.webp', import.meta.url).href;
 
   actualizarPausa();
