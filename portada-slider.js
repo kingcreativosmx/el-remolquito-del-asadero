@@ -18,7 +18,8 @@ if (hero && !document.querySelector('.portada-slider')) {
       <div class="portada-slider__controles">
         <button type="button" class="portada-slider__punto" aria-label="Ver portada"
                 aria-current="true"></button>
-        <button type="button" class="portada-slider__punto" aria-label="Ver Promo Miércoles"></button>
+        <button type="button" class="portada-slider__punto" aria-label="Ver Promo Miércoles"
+                disabled></button>
         <button type="button" class="portada-slider__pausa">Pausar</button>
       </div>
     </div>
@@ -49,16 +50,16 @@ if (hero && !document.querySelector('.portada-slider')) {
     pedidos.append(boton);
   }
 
-  slider.querySelector('.portada-promo__imagen').src =
-    new URL('./assets/promo-portada.webp', import.meta.url).href;
-
+  const imagenPromo = slider.querySelector('.portada-promo__imagen');
   const track = slider.querySelector('.portada-slider__track');
   const diapositivas = [...track.children];
   const puntos = slider.querySelectorAll('.portada-slider__punto');
   const pausa = slider.querySelector('.portada-slider__pausa');
   const movimientoReducido = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const vistaMovil = window.matchMedia('(max-width: 740px)');
 
   let actual = 0;
+  let promoLista = false;
   let pausado = movimientoReducido.matches;
   let cursorDentro = false;
   let temporizador;
@@ -70,7 +71,7 @@ if (hero && !document.querySelector('.portada-slider')) {
 
   function programar() {
     clearTimeout(temporizador);
-    if (pausado || cursorDentro || document.hidden ||
+    if (!promoLista || pausado || cursorDentro || document.hidden ||
         track.contains(document.activeElement)) return;
 
     temporizador = setTimeout(() => {
@@ -79,7 +80,7 @@ if (hero && !document.querySelector('.portada-slider')) {
   }
 
   function mostrar(indice) {
-    if (indice === actual) {
+    if (indice === actual || (indice === 1 && !promoLista)) {
       programar();
       return;
     }
@@ -101,7 +102,7 @@ if (hero && !document.querySelector('.portada-slider')) {
       else puntos[i].removeAttribute('aria-current');
     });
 
-    if (!movimientoReducido.matches) {
+    if (!vistaMovil.matches && !movimientoReducido.matches && typeof anterior.animate === 'function') {
       saliente = anterior;
       anterior.classList.add('is-leaving');
       const tiempos = { duration: 480, easing: 'ease-in-out' };
@@ -157,6 +158,13 @@ if (hero && !document.querySelector('.portada-slider')) {
     actualizarPausa();
   });
   document.addEventListener('visibilitychange', programar);
+
+  imagenPromo.addEventListener('load', () => {
+    promoLista = true;
+    puntos[1].disabled = false;
+    programar();
+  }, { once: true });
+  imagenPromo.src = new URL('./assets/promo-portada.webp', import.meta.url).href;
 
   actualizarPausa();
 }
