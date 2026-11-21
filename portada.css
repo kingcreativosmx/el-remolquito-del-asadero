@@ -1,0 +1,32 @@
+.hero {
+  background: #17130f url("./assets/banner-remolquito.webp")
+    center / 100% auto no-repeat;
+}
+
+.hero .hero-grid {
+  width: 84%;
+  min-height: calc(100vw * 732 / 2048);
+  grid-template-columns: minmax(0, 48%) 1fr;
+  gap: 0;
+  padding-block: clamp(1.5rem, 3vw, 3rem);
+}
+
+.hero h1 {
+  font-size: clamp(2.25rem, 7.4vw, 10rem);
+}
+
+@media (max-width: 760px) {
+  .hero {
+    background-position: center bottom;
+  }
+
+  .hero .hero-grid {
+    width: calc(100% - 2rem);
+    grid-template-columns: 1fr;
+    padding-block: 2rem calc(100vw * 732 / 2048 + 1rem);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 11vw, 5rem);
+  }
+}

@@ -1,0 +1,45 @@
+#menu .card.en-pedido {
+  border-color: #25d366;
+  outline: 1px solid rgb(37 211 102 / 45%);
+}
+
+#menu .pedido-cantidad {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  color: #e8d1aa;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+#menu .en-pedido .pedido-cantidad {
+  border-color: #25d366;
+  background: #25d366;
+  color: #10261a;
+}
+
+#paquetes summary .pedido-cantidad {
+  margin-inline-start: auto;
+}
+
+#enviar-orden a.pedido-sucursal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 56px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #b99a69;
+  border-radius: 12px;
+  background: #e8d1aa;
+  color: #24180e;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+#enviar-orden a.pedido-sucursal:hover {
+  background: #f5e3c6;
+}
