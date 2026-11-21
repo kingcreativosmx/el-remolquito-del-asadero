@@ -420,3 +420,12 @@ button.pedido-sucursal:hover {
   border-radius: 50%;
   background: #168445;
 }
+/* Ajusta el video de la Promo Miércoles al ancho del menú */
+#promo video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  box-sizing: border-box;
+}
