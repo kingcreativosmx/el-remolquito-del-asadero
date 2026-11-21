@@ -58,8 +58,8 @@ const groups = [
     ]],
   ]],
   ['carnes', 'Carnes y asados', included, [
-    ['½ pollo', 100],
-    ['Pollo entero', 200],
+    ['½ pollo', 100, null, { picor: true }],
+    ['Pollo entero', 200, null, { picor: true }],
     ['¼ kg de costilla', 100, ribs],
     ['½ kg de costilla', 160, ribs],
     ['1 kg de costilla', 320, ribs],
@@ -117,8 +117,9 @@ for (const [id, name, description, products] of groups) {
   const grid = element('div', '', 'grid');
   const isPackage = id === 'paquetes';
 
-  for (const [product, price, details] of products) {
+  for (const [product, price, details, { picor = false } = {}] of products) {
     const itemName = isPackage ? 'Paquete ' + product : product;
+    const offersPicor = isPackage || picor;
     const card = element(isPackage ? 'details' : 'article', '', 'card');
     const title = element('h3', itemName);
     const productId = id + ':' + product;
@@ -147,12 +148,13 @@ for (const [id, name, description, products] of groups) {
     if (id !== 'extras') {
       options.push(['Complemento', ['Frijoles', 'Arroz']]);
     }
+    if (offersPicor) {
+      options.push(['Picor', ['Natural', 'Enchilado', 'BBQ']]);
+    }
 
     const controls = options.map(([label, values]) => {
       const control = element('select');
-      if (!isPackage) {
-        control.setAttribute('aria-label', label + ' para ' + itemName);
-      }
+      control.setAttribute('aria-label', label + ' para ' + itemName);
       for (const value of values) {
         control.add(new Option(value, value));
       }
@@ -204,7 +206,16 @@ for (const [id, name, description, products] of groups) {
       card.append(label);
     }
 
-    card.append(...controls, add);
+    if (offersPicor) {
+      const choice = controls.at(-1);
+      choice.id = 'picor-' + id + '-' + grid.children.length;
+      const label = element('label', 'Elige el picor', isPackage ? 'package-complement-label' : '');
+      label.htmlFor = choice.id;
+      card.append(...controls.slice(0, -1), label, choice);
+    } else {
+      card.append(...controls);
+    }
+    card.append(add);
     grid.append(card);
   }
 
